@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restricted Website</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            text-align: center;
+            padding: 50px;
+        }
+        .access-denied {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="content">
+        <h1>Loading...</h1>
+    </div>
+
+    <script>
+        // List of allowed IP addresses
+        const allowedIPs = ['123.45.7.89', '976.54.32']; // Replace with the allowed IP addresses
+
+        // Function to get the user's IP address
+        async function getUserIP() {
+            // Using an external API to fetch the user's IP address
+            const response = await fetch('https://api.ipify.org?format=json');
+            const data = await response.json();
+            return data.ip;
+        }
+
+        // Function to check IP and display content
+        async function checkAccess() {
+            const userIP = await getUserIP();
+            const contentDiv = document.getElementById('content');
+
+            // Check if the user's IP is in the allowed list
+            if (allowedIPs.includes(userIP)) {
+                // If allowed, display the website
+                contentDiv.innerHTML = `
+                    <h1>Welcome to the private website</h1>
+                    <p>Your IP address (${userIP}) has been granted access.</p>
+                `;
+            } else {
+                // If not allowed, display access denied message
+                contentDiv.innerHTML = `
+                    <h1>Access Denied</h1>
+                    <p class="access-denied">Your IP address (${userIP}) is not allowed to access this website.</p>
+                `;
+            }
+        }
+
+        // Run the access check when the page loads
+        checkAccess();
+    </script>
+</body>
+</html>
